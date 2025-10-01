@@ -180,12 +180,25 @@ POST http://localhost:8080/orders
 
 ---
 ### Justificación de partición de primer nivel
-La partición se realizó por dominio funcional (productos, clientes, órdenes) para facilitar escalabilidad, mantenimiento y despliegue independiente.
+El método elegido para la partición del sistema, centrado en los Dominios Funcionales (ej. Productos, Clientes, Órdenes), es la base de nuestra Arquitectura de Microservicios (implícita al usar un API Gateway y contenedores).
+
+- Autonomía y Cohesión:
+La partición se fundamenta en la alta cohesión funcional interna de cada dominio. Esto asegura que los cambios en un módulo (p. ej., la lógica de "Clientes") no requieran modificar otros módulos (p. ej., "Productos").
+
+- Escalabilidad Horizontal:
+Al aislar las funciones por dominio, se permite el escalado independiente (scaling independently). Por ejemplo, si el servicio de "Órdenes" experimenta picos de carga durante una promoción, podemos escalar solo ese módulo sin afectar o sobredimensionar los módulos de "Clientes" o "Productos".
+
+- Baja Fricción en Despliegue:
+La partición asegura que los equipos de desarrollo solo necesiten desplegar el código modificado de un solo dominio. Esto reduce el riesgo de errores de regresión en todo el sistema y mejora la velocidad del Time-to-Market(tiempo total que transcurre desde que se concibe una idea de funcionalidad (o una corrección de error) hasta que esa funcionalidad está disponible y utilizable por los clientes en el mercado (producción).).
 
 ---
 ### Proceso para encontrar los componentes
-Analizamos los requerimientos del dominio e-commerce e identificaron los módulos funcionales principales. Cada módulo expone interfaces para interacción y desacoplamiento.
-Elegimos utilizar partición por dominios, decisión que condicionó el resto del diseño, luego definimos las funciones principales y despues meditamos si necesitaban comunicarse entre si.
+El proceso de diseño para definir los componentes y su interacción siguió un enfoque centrado en el dominio (Domain-Driven Design), lo cual condicionó la estructura global del sistema.
+
+1. Análisis del Dominio y Partición
+Identificación del Dominio: Se analizaron los requisitos de negocio del e-commerce para mapear los límites del contexto acotado (Bounded Contexts). Esto implicó definir qué datos y lógica pertenecen intrínsecamente a "Productos", "Clientes" y "Órdenes". Esta partición es la decisión arquitectónica fundamental (Bass et al.).
+
+2. Partición Primaria: Se tomó la decisión de particionar por dominios funcionales, un enfoque que automáticamente determina los límites de los componentes de primer nivel. Esta elección se hizo para maximizar la cohesión (Richards & Ford).
 
 
 ---
